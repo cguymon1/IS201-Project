@@ -1,0 +1,282 @@
+Tic-Tac-Toe game. Try to beat the computer!!!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Carson Guymon - About Me</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <title>Neon Tic-Tac-Toe</title>
+    <style>
+
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-x: #22d3ee; /* Cyan */
+            --accent-o: #f472b6; /* Pink */
+            --win-color: #4ade80; /* Green */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .status {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            height: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            background-color: #334155;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cell:hover {
+            background-color: #334155;
+        }
+
+        .cell.x { color: var(--accent-x); text-shadow: 0 0 10px var(--accent-x); }
+        .cell.o { color: var(--accent-o); text-shadow: 0 0 10px var(--accent-o); }
+        .cell.winner { background-color: var(--win-color); color: white; }
+
+        .controls {
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1rem;
+            background-color: var(--accent-x);
+            border: none;
+            border-radius: 5px;
+            color: var(--bg-color);
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="index.html">Carson Guymon</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">Resume</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="post.html">Hikes</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="ai.html">Game</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    <h1>Tic-Tac-Toe</h1>
+    <div class="status" id="status">Your Turn (X)</div>
+
+    <div class="grid" id="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+
+    <div class="controls">
+        <button onclick="resetGame()">Restart Game</button>
+    </div>
+
+    <script>
+        const boardElement = document.getElementById('board');
+        const cells = document.querySelectorAll('.cell');
+        const statusText = document.getElementById('status');
+        
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let gameActive = true;
+        const HUMAN = "X";
+        const COMPUTER = "O";
+
+        const winConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Cols
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+
+        function handleCellClick(e) {
+            const index = e.target.getAttribute('data-index');
+
+            if (board[index] !== "" || !gameActive) return;
+
+            makeMove(index, HUMAN);
+
+            if (gameActive) {
+                statusText.innerText = "Computer is thinking...";
+                setTimeout(computerTurn, 500);
+            }
+        }
+
+        function makeMove(index, player) {
+            board[index] = player;
+            cells[index].innerText = player;
+            cells[index].classList.add(player.toLowerCase());
+            checkResult();
+        }
+
+        function computerTurn() {
+            if (!gameActive) return;
+
+            // 1. Try to win or block
+            let move = findBestMove();
+            
+            // 2. Otherwise pick a random empty spot
+            if (move === null) {
+                let available = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
+                move = available[Math.floor(Math.random() * available.length)];
+            }
+
+            if (move !== undefined) {
+                makeMove(move, COMPUTER);
+                if (gameActive) statusText.innerText = "Your Turn (X)";
+            }
+        }
+
+        function findBestMove() {
+            // Simple logic: Win if possible, otherwise block human
+            for (let player of [COMPUTER, HUMAN]) {
+                for (let condition of winConditions) {
+                    const [a, b, c] = condition;
+                    const values = [board[a], board[b], board[c]];
+                    if (values.filter(v => v === player).length === 2 && values.includes("")) {
+                        return condition[values.indexOf("")];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function checkResult() {
+            let roundWon = false;
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    roundWon = true;
+                    highlightWinner([a, b, c]);
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                const winner = board[cells[0].innerText === HUMAN ? 0 : 1]; // logic check
+                statusText.innerText = board.includes(HUMAN) && roundWon ? `Game Over! Win detected.` : ""; 
+                // Simplified winner text:
+                let lastPlayer = board.filter(x => x !== "").length % 2 === 0 ? COMPUTER : HUMAN;
+                statusText.innerText = lastPlayer === HUMAN ? "You Won! 🎉" : "Computer Won! 🤖";
+                gameActive = false;
+                return;
+            }
+
+            if (!board.includes("")) {
+                statusText.innerText = "It's a Draw! 🤝";
+                gameActive = false;
+            }
+        }
+
+        function highlightWinner(indices) {
+            indices.forEach(i => cells[i].classList.add('winner'));
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            gameActive = true;
+            statusText.innerText = "Your Turn (X)";
+            cells.forEach(cell => {
+                cell.innerText = "";
+                cell.classList.remove('x', 'o', 'winner');
+            });
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    </script>
+</body>
+
+
+<footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                   
+                            
+                             
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Carson G. 2026</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</html>
+
+
+

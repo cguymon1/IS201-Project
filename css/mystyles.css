@@ -1,0 +1,62 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: brown;
+    background-color: tan;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: whitesmoke;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.logo {
+    font-family: 'Georgia', serif;
+    color: #2c3e50;
+    margin: 0;
+}
+
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #2980b9; 
+    font-weight: bold;
+}
+
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;  
+    padding: 40px 20px;
+    text-align: center; 
+}
+
+.hiking-list {
+    display: inline-block; 
+    text-align: left;    
+    margin-bottom: 30px;
+}
+
+.hike-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+
+.tableau-wrapper {
+    margin: 40px auto;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #b78787;
+}
+
+.footer {
+    font-family: 'Courier New', Courier, monospace;
+    color: #a18787;
+    text-align: center;
+    padding: 30px;
+}
